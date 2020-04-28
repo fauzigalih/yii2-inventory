@@ -14,6 +14,4 @@ composer update -vvv
 3. Setting database in <code>config/db.php</code>
 4. Finish.
 
-
-
-Created by: <b>@fauzigalihajisaputro</b>
+<br><br><br>Created by: <b>@fauzigalihajisaputro</b>
