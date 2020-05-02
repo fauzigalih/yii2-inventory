@@ -1,5 +1,4 @@
 <?php
-
 use app\models\User;
 use kartik\form\ActiveForm;
 use kartik\select2\Select2;
@@ -28,44 +27,42 @@ use yii\web\View;
                     'class' => 'form-filter'
                 ],
         ]);
-        echo Form::widget([
-            'model' => $model,
-            'form' => $form,
-            'columns' => 3,
-            'attributes' => [
-                'fullName' => ['type' => Form::INPUT_TEXT, 'label' => 'Nama Lengkap', 'options' => ['placeholder' => 'Enter Your Name...']],
-                'userName' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Username...']],
-                'role' => [
-                    'type' => Form::INPUT_WIDGET,
-                    'widgetClass' => 'kartik\select2\Select2',
-                    'options' => [
+        ?>
+        <div class="row">
+            <div class="col-md-4">
+                <?= $form->field($model, 'fullName') ?>
+            </div>
+            <div class="col-md-4">
+                <?= $form->field($model, 'userName') ?>
+            </div>
+            <div class="col-md-4">
+                <?=
+                $form->field($model, 'role')->widget(Select2::classname(),
+                    [
                         'data' => User::$roleCategories,
                         'options' => [
-                            'placeholder' => 'Pilih',
-                            'class' => 'form-control'
+                            'placeholder' => 'Select..',
                         ],
-                        'pluginOptions' => [
-                            'allowClear' => true
-                        ],
-                    ],
-                ],
-                'active' => [
-                    'type' => Form::INPUT_WIDGET,
-                    'widgetClass' => 'kartik\select2\Select2',
-                    'options' => [
+                ]);
+                ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <?=
+                $form->field($model, 'active')->widget(Select2::classname(),
+                    [
                         'data' => User::$activeCategories,
                         'options' => [
-                            'placeholder' => 'Pilih',
+                            'placeholder' => 'Select...',
                         ],
                         'pluginOptions' => [
                             'allowClear' => true
                         ],
-                    ]
-                ],
-            //'passwordHashConfirm' => ['type' => Form::INPUT_PASSWORD, 'maxlength' => true, 'options' => ['placeholder' => 'Enter Password...']],
-            ],
-        ]);
-        ?>
+                ]);
+                ?>
+            </div>
+        </div>
         <div class="form-group text-right">
             <?=
             Html::submitButton('<i class="glyphicon glyphicon-search with-text"></i> Search',

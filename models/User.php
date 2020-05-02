@@ -25,9 +25,9 @@ class User extends ActiveRecord implements IdentityInterface {
     public $newPasswordConfirm;
 
     const ROLE_ADMIN = 1;
-    const ROLE_USER = 0;
-    const STATUS_ACTIVE = 1;
-    const STATUS_INACTIVE = 0;
+    const ROLE_USER = 2;
+    const STATUS_ACTIVE = 10;
+    const STATUS_INACTIVE = 9;
 
     public static $roleCategories = [
         self::ROLE_ADMIN => 'ADMIN',
@@ -50,7 +50,7 @@ class User extends ActiveRecord implements IdentityInterface {
      */
     public function rules() {
         return [
-            [['fullName', 'userName', 'password', 'role', 'active'], 'required'],
+//            [['fullName', 'userName', 'password', 'role', 'active'], 'required'],
             [['role', 'active'], 'integer'],
             [['fullName', 'userName'], 'string', 'max' => 80],
             [['password', 'authKey', 'accessToken'], 'string', 'max' => 255],
@@ -186,7 +186,7 @@ class User extends ActiveRecord implements IdentityInterface {
     }
     
     public function validateStatusActive($status) {
-        return ($status === self::STATUS_INACTIVE) ? true : false;
+        return ($status === self::STATUS_ACTIVE) ? true : false;
     }
     
     public function validateUsername($attribute = 'userName') {

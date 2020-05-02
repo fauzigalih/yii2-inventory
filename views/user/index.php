@@ -1,4 +1,6 @@
 <?php
+
+use app\models\User;
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
@@ -48,7 +50,6 @@ $this->title = $page . '- ' . Yii::$app->name;
             ],
             'fullName',
             'userName',
-            'password',
             [
                 'label' => 'Role',
                 'attribute' => 'role',
@@ -60,7 +61,7 @@ $this->title = $page . '- ' . Yii::$app->name;
                 'label' => 'Active',
                 'attribute' => 'active',
                 'value' => function($model) {
-                    return ($model->active == 1) ? 'Yes' : 'No';
+                    return ($model->active == User::STATUS_ACTIVE) ? 'Yes' : 'No';
                 }
             ],
             [

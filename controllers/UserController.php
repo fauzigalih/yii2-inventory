@@ -8,14 +8,11 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use yii\rest\ActiveController;
 
 /**
  * UserController implements the CRUD actions for User model.
  */
 class UserController extends Controller {
-    
-    public $modelClass = 'app\models\User';
     /**
      * {@inheritdoc}
      */
@@ -45,7 +42,7 @@ class UserController extends Controller {
      * @return mixed
      */
     public function actionIndex() {
-        if (!Yii::$app->user->identity->role == 1) {
+        if (!(Yii::$app->user->identity->role === User::ROLE_ADMIN)) {
             Yii::$app->session->setFlash('error',
                 'Sorry, you\'re not permission on this session.');
             return $this->goHome();
@@ -68,7 +65,7 @@ class UserController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id) {
-        if (!Yii::$app->user->identity->role == 1) {
+        if (!(Yii::$app->user->identity->role === User::ROLE_ADMIN)) {
             Yii::$app->session->setFlash('error',
                 'Sorry, you\'re not permission on this session.');
             return $this->goHome();
@@ -88,7 +85,7 @@ class UserController extends Controller {
      * @return mixed
      */
     public function actionCreate() {
-        if (!Yii::$app->user->identity->role == 1) {
+        if (!(Yii::$app->user->identity->role === User::ROLE_ADMIN)) {
             Yii::$app->session->setFlash('error',
                 'Sorry, you\'re not permission on this session.');
             return $this->goHome();
@@ -113,7 +110,7 @@ class UserController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id) {
-        if (!Yii::$app->user->identity->role == 1) {
+        if (!(Yii::$app->user->identity->role === User::ROLE_ADMIN)) {
             Yii::$app->session->setFlash('error',
                 'Sorry, you\'re not permission on this session.');
             return $this->goHome();
@@ -147,7 +144,7 @@ class UserController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id) {
-        if (!Yii::$app->user->identity->role == 1) {
+        if (!(Yii::$app->user->identity->role === User::ROLE_ADMIN)) {
             Yii::$app->session->setFlash('error',
                 'Sorry, you\'re not permission on this session.');
             return $this->goHome();

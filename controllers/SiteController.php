@@ -18,36 +18,17 @@ class SiteController extends Controller {
      * {@inheritdoc}
      */
     public function behaviors() {
-//        return [
-//            'access' => [
-//                'class' => AccessControl::className(),
-//                'only' => ['logout'],
-//                'rules' => [
-//                    [
-//                        'actions' => ['logout'],
-//                        'allow' => true,
-//                        'roles' => ['@'],
-//                    ],
-//                ],
-//            ],
-//            'verbs' => [
-//                'class' => VerbFilter::className(),
-//                'actions' => [
-//                    'logout' => ['post'],
-//                ],
-//            ],
-//        ];
         return [
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error', 'register'],
+                        'actions' => ['login', 'register'],
                         'allow' => true,
-                        'roles' => ['?'],
+                        'roles' => ['?', '@'],
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout', 'error', 'index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -93,19 +74,18 @@ class SiteController extends Controller {
      */
     public function actionLogin() {
         if (!Yii::$app->user->isGuest) {
+            Yii::$app->session->setFlash('warning',
+                'Can\'t access this because you are logged in...');
             return $this->goHome();
         }
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goHome();
-            //return $this->goBck();
         }
 
         $model->password = '';
-        return $this->render('login', [
-                'model' => $model,
-        ]);
+        return $this->render('login', ['model' => $model]);
     }
 
     /**
@@ -131,10 +111,7 @@ class SiteController extends Controller {
 
             return $this->refresh();
         }
-        return $this->render('contact',
-                [
-                'model' => $model,
-        ]);
+        return $this->render('contact', ['model' => $model]);
     }
 
     /**
@@ -147,29 +124,27 @@ class SiteController extends Controller {
     }
 
     public function actionRegister() {
+        if (!Yii::$app->user->isGuest) {
+            Yii::$app->session->setFlash('warning',
+                'Can\'t access this because you are logged in...');
+            return $this->goHome();
+        }
+
         $model = new RegisterForm();
         if ($model->load(Yii::$app->request->post())) {
             if ($model->password != $model->passwordConfirm) {
                 Yii::$app->session->setFlash('error',
                     'Password confirm must same. Try again..');
                 return $this->render('register', ['model' => $model]);
-            }else if($model->register()){
-                //$model->register();
+            } else if ($model->register()) {
                 Yii::$app->session->setFlash('success',
                     'Thank you for registration. You can login now.');
-                //return $this->goHome();
                 return $this->redirect(['login']);
             } else {
-                return $this->render('register',
-                [
-                'model' => $model,
-        ]);
+                return $this->render('register', ['model' => $model]);
             }
         }
-        return $this->render('register',
-                [
-                'model' => $model,
-        ]);
+        return $this->render('register', ['model' => $model]);
     }
 
 }

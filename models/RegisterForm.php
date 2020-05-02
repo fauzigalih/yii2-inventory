@@ -22,9 +22,6 @@ class RegisterForm extends Model {
     public $rememberMe = true;
     public $_user = false;
 
-    const ROLE_USER = 0;
-    const STATUS_ACTIVE = 1;
-
     /**
      * @return array the validation rules.
      */
@@ -34,8 +31,8 @@ class RegisterForm extends Model {
             ['rememberMe', 'boolean'],
             [['fullName', 'userName',], 'string', 'max' => 30],
             [['password', 'passwordConfirm'], 'string', 'max' => 255],
-            ['role', 'default', 'value' => self::ROLE_USER],
-            ['active', 'default', 'value' => self::STATUS_ACTIVE],
+            ['role', 'default', 'value' => User::ROLE_USER],
+            ['active', 'default', 'value' => User::STATUS_ACTIVE],
             //Validate username if exist
             ['userName', 'validateUsername'],
         ];
@@ -59,7 +56,6 @@ class RegisterForm extends Model {
         if (!$this->validate()) {
             return null;
         } else if ($this->validate()) {
-
             $model = new User();
             $model->fullName = $this->fullName;
             $model->userName = $this->userName;

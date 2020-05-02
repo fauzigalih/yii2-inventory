@@ -50,7 +50,7 @@ class LoginForm extends Model {
     public function validatePassword($attribute, $params) {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-            if ($user->validateStatusActive($user->active)) {
+            if (!$user->validateStatusActive($user->active)) {
                 $this->addError($attribute, 'Username is not active now.');
             } else if (!$user || !$user->validatePassword($this->password)) {
                 $this->addError($attribute, 'Incorrect username or password.');

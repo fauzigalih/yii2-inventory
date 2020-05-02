@@ -24,7 +24,7 @@ class ToolbarFilterButton extends Widget
             $filterModelData = Yii::$app->request->get($modelName);
             if ($filterModelData) {
                 foreach ($filterModelData as $key => $value) {
-                    if (!empty($value)  !== null) {
+                    if (!empty($value)) {
                         $isFiltered = true;
                     }
                 }

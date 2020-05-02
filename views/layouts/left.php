@@ -1,3 +1,7 @@
+<?php
+
+use app\models\User;
+?>
 <aside class="main-sidebar">
 
     <section class="sidebar">
@@ -42,7 +46,7 @@
                         ]
                     ],
                     ['label' => 'Transaction', 'icon' => 'bar-chart', 'url' => ['/transaction']],
-                    ['label' => 'Users', 'icon' => 'user', 'url' => ['/user'], 'visible' => !Yii::$app->user->identity->role == 0],
+                    ['label' => 'Users', 'icon' => 'user', 'url' => ['/user'], 'visible' => Yii::$app->user->identity->role === User::ROLE_ADMIN],
                     ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
                 ],
             ]

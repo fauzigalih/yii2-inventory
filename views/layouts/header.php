@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use app\models\User;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -28,8 +29,13 @@ use yii\helpers\Html;
                                  alt="User Image"/>
 
                             <p>
-                                Fauzi Galih - Web Developer
-                                <small>Member since Nov. 2012</small>
+                                <?= Yii::$app->user->identity->fullName ?>
+                                <small>
+                                    <strong>
+                                        <?= Yii::$app->user->identity->role === User::ROLE_ADMIN ? 'Admin' : 'User' ?>
+                                    </strong> 
+                                    of app inventory system.
+                                </small>
                             </p>
                         </li>
                         <!-- Menu Body 
