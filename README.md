@@ -13,3 +13,5 @@ composer update -vvv
 ```
 3. Setting database in <code>config/db.php</code>
 4. Finish.
+
+<br><br><br>Created by: <a href="https://www.instagram.com/fauzigalihajisaputro/">@fauzigalihajisaputro</a>
