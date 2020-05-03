@@ -1,2 +1,3 @@
-db.php
-params.php
+# Ignore this files
+/db.php
+/params.php
