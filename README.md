@@ -3,7 +3,10 @@ Project build with framework yii2 template basic.
 
 This project in step develop, version finished at 30 May 2020.
 
-<hr>
+# Required Project
+1. Composer
+2. PHP version 7 or above
+3. Git
 
 # Installation project
 1. Clone this project with new repository, and place to folder <code>/htdocs/..</code>
