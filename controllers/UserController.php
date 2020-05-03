@@ -70,7 +70,7 @@ class UserController extends Controller {
                 'Sorry, you\'re not permission on this session.');
             return $this->goHome();
         }
-
+        
         $model = $this->findModel($id);
 
         return $this->render('view',

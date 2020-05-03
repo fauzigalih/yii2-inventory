@@ -16,7 +16,6 @@ $config = [
 // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'K74UHHICve4bVMFf96xTrl56GswoH9K2',
             'scriptUrl' => 'inventory/web/index.php',
-//            'parsers' => ['application/json' => 'yii\web\JsonParser'],
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -30,9 +29,9 @@ $config = [
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
-            // send all mails to a file by default. You have to set
-// 'useFileTransport' to false and configure a transport
-// for the mailer to send real emails.
+//             send all mails to a file by default. You have to set
+//            'useFileTransport' to false and configure a transport
+//            for the mailer to send real emails.
             'useFileTransport' => true,
         ],
         'log' => [
@@ -47,9 +46,12 @@ $config = [
         'db' => $db,
         'urlManager' => [
             'enablePrettyUrl' => true,
-//            'enableStrictParsing' => true,
             'showScriptName' => false,
-            'rules' => [],
+            'rules' => [
+                '<controller:\w+>/<id:\d+>' => '<controller>',
+                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+            ],
         ],
     ],
     'modules' => [
