@@ -49,10 +49,17 @@ $this->params['breadcrumbs'][] = $page;
             'typeProduct',
             'unit',
             'price',
-            'imageProduct',
+            [
+                'attribute' => 'imageProduct',
+                'format' => 'html',
+                'value' => function($model) {
+                    return Html::img(Yii::getAlias("@web/img/product/$model->imageProduct"),
+                            ['width' => '80px', 'height' => '50px']);
+                }
+            ],
             'stockFirst',
-            'qtyIn',
-            'qtyOut',
+            'stockIn',
+            'stockOut',
             'stockFinal',
             [
                 'class' => 'yii\grid\ActionColumn',

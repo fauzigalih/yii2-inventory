@@ -7,9 +7,6 @@ use yii\widgets\DetailView;
 
 $page = 'Products';
 $titlePage = 'View ' . $page;
-$this->title = $titlePage . ' - ' . Yii::$app->name;
-$this->params['breadcrumbs'][] = ['label' => $page, 'url' => ['index']];
-$this->params['breadcrumbs'][] = $titlePage;
 ?>
 <div class="products-view">
 
@@ -19,6 +16,7 @@ $this->params['breadcrumbs'][] = $titlePage;
         [
             'model' => $model,
             'titlePage' => $titlePage,
+            'page' => $page
     ])
     ?>
 </div>

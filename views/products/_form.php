@@ -14,7 +14,8 @@ $this->params['breadcrumbs'][] = ['label' => $page, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $titlePage;
 
 $isDisabled = Yii::$app->controller->action->id == 'view';
-
+$isActionCreate = Yii::$app->controller->action->id == 'create';
+$displayFile = !$isActionCreate ? Yii::getAlias("@web/img/product/$model->imageProduct") : false;
 ?>
 
 <div class="products-form">
@@ -28,13 +29,31 @@ $isDisabled = Yii::$app->controller->action->id == 'view';
                 'form' => $form,
                 'columns' => 3,
                 'attributes' => [
-                    'invoice' => ['type' => Form::INPUT_TEXT, 'options' => ['readonly' => true, 'disabled' => $isDisabled]],
+                    'invoice' => ['type' => Form::INPUT_TEXT, 'options' => ['disabled' => $isDisabled]],
                     'nameProduct' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Name Product...', 'disabled' => $isDisabled]],
                     'typeProduct' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Type Product...', 'disabled' => $isDisabled]],
                     'unit' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Unit...', 'disabled' => $isDisabled]],
                     'price' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Price...', 'disabled' => $isDisabled]],
                     'stockFirst' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Stock...', 'disabled' => $isDisabled]],
-                    'imageProduct' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Price...', 'disabled' => $isDisabled]],
+                    '_imageProduct' => [
+                        'type' => Form::INPUT_WIDGET,
+                        'widgetClass' => 'kartik\file\FileInput',
+                        'options' => [
+                            'disabled' => $isDisabled,
+                            'options' => [
+                                'multiple' => false,
+                                'placeholder' => 'Pilih',
+                                'class' => 'form-control'
+                            ],
+                            'pluginOptions' => [
+                                'showUpload' => false,
+                                'showRemove' => false,
+                                'initialPreview' => $displayFile,
+                                'initialPreviewAsData' => true,
+                                'initialCaption' => $model->imageProduct,
+                            ],
+                        ],
+                    ],
                 ],
             ]);
             ?>

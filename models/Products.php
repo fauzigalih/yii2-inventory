@@ -5,6 +5,10 @@ namespace app\models;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\data\ActiveDataProvider;
+use yii\web\UploadedFile;
+use yii\helpers\FileHelper;
+
+//use function sanitizeFileName;
 
 /**
  * This is the model class for table "products".
@@ -16,16 +20,19 @@ use yii\data\ActiveDataProvider;
  * @property string|null $unit
  * @property int|null $price
  * @property int|null $stockFirst
- * @property int|null $qtyIn
- * @property int|null $qtyOut
+ * @property int|null $stockIn
+ * @property int|null $stockOut
  * @property int|null $stockFinal
  * @property string|null $imageProduct
  * @property date $datePublished
  * @property int|null $active
  */
 class Products extends ActiveRecord {
+    public $_imageProduct;
+
     const STATUS_ACTIVE = 1;
     const STATUS_INACTIVE = 0;
+    const DEFAULT_VALUE_NULL = 0;
 
     public static $activeCategories = [
         self::STATUS_ACTIVE => "ACTIVE",
@@ -44,9 +51,12 @@ class Products extends ActiveRecord {
      */
     public function rules() {
         return [
-            [['nameProduct', 'typeProduct', 'unit', 'price', 'stockFirst', 'imageProduct'], 'required'],
-            [['price', 'stockFirst', 'qtyIn', 'qtyOut', 'stockFinal', 'active'], 'integer'],
+            [['nameProduct', 'typeProduct', 'unit', 'price', 'stockFirst', 'imageProduct', '_imageProduct'], 'required'],
+            [['price', 'stockFirst', 'stockIn', 'stockOut', 'stockFinal', 'active'], 'integer'],
             [['invoice', 'nameProduct', 'typeProduct', 'unit', 'imageProduct'], 'string', 'max' => 45],
+            [['datePublished'], 'default', 'value' => date('Y-m-d')],
+            [['stockIn', 'stockOut'], 'default', 'value' => self::DEFAULT_VALUE_NULL],
+            ['active', 'default', 'value' => self::STATUS_ACTIVE]
         ];
     }
 
@@ -62,13 +72,46 @@ class Products extends ActiveRecord {
             'unit' => 'Unit',
             'price' => 'Price',
             'stockFirst' => 'Stock First',
-            'qtyIn' => 'Qty In',
-            'qtyOut' => 'Qty Out',
+            'stockIn' => 'Stock In',
+            'stockOut' => 'Stock Out',
             'stockFinal' => 'Stock Final',
             'imageProduct' => 'Image Product',
             'datePublished' => 'Date Published',
             'active' => 'Active',
         ];
+    }
+
+    public function save($runValidation = true, $attributeNames = null) {
+        $baseUrl = Yii::$app->request->baseUrl;
+        $transaction = Yii::$app->db->beginTransaction();
+
+        $uploadedFile = UploadedFile::getInstance($this, '_imageProduct');
+        if ($uploadedFile) {
+            $fileDir = Yii::getAlias('@webroot/img/product');
+            if (!file_exists($fileDir))
+                FileHelper::createDirectory($fileDir);
+
+            if ($this->_imageProduct != $this->imageProduct)
+                unlink("$fileDir/$this->imageProduct");
+
+            date_default_timezone_set('Asia/Jakarta');
+            $dateTime = date('dmYHis');
+            $fileName = strtolower("$this->nameProduct" . "_$this->invoice" . "_$dateTime." . $uploadedFile->extension);
+            if (!$uploadedFile->saveAs("$fileDir/$fileName")) {
+                $transaction->rollBack();
+                return false;
+            }
+            $this->imageProduct = $fileName;
+            $this->stockFinal = $this->stockFirst;
+
+            if (!parent::save($runValidation, $attributeNames)) {
+                $transaction->rollBack();
+                return false;
+            }
+
+            $transaction->commit();
+            return true;
+        }
     }
 
     public function search() {

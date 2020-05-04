@@ -44,9 +44,9 @@ class ProductsController extends Controller {
     public function actionIndex() {
 
         $model = new Products();
-        
+
         $model->load(Yii::$app->request->get());
-        
+
         return $this->render('index',
                 [
                     'model' => $model,
@@ -76,7 +76,10 @@ class ProductsController extends Controller {
     public function actionCreate() {
         $model = new Products();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            if (!$model->save()) {
+                return $this->goHome();
+            }
             return $this->redirect(['index']);
         }
 
@@ -113,9 +116,11 @@ class ProductsController extends Controller {
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id) {
-        $this->findModel($id)->delete();
-
+    public function actionDelete($id) {        
+        $model = $this->findModel($id);
+        unlink(Yii::getAlias("@webroot/img/product/$model->imageProduct"));
+        $model->delete();
+        
         return $this->redirect(['index']);
     }
 
