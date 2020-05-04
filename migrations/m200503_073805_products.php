@@ -21,10 +21,10 @@ class m200503_073805_products extends Migration
             'price' => $this->integer(11)->notNull(),
             'price' => $this->integer(11)->notNull(),
             'stockFirst' => $this->integer(11)->notNull(),
-            'qtyIn' => $this->integer(11)->notNull(),
-            'qtyOut' => $this->integer(11)->notNull(),
+            'stockIn' => $this->integer(11)->notNull(),
+            'stockOut' => $this->integer(11)->notNull(),
             'stockFinal' => $this->integer(11)->notNull(),
-            'imageProduct' => $this->string(50)->notNull(),
+            'imageProduct' => $this->string(255)->notNull(),
             'datePublished' => $this->date()->notNull(),
             'active' => $this->integer(11)->notNull()
         ]);
