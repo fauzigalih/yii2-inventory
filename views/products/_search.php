@@ -5,6 +5,7 @@ use kartik\select2\Select2;
 use kartik\builder\Form;
 use yii\helpers\Html;
 use yii\web\View;
+use app\models\Products;
 
 /* @var $this View */
 /* @var $model MsUser */
@@ -34,10 +35,37 @@ use yii\web\View;
             'attributes' => [
                 'invoice' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Code Product...']],
                 'nameProduct' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Name Product...']],
-                'unit' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Unit...']],
-                'stockFinal' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Min Stock...']],
-                'price' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Price...']],
-                'active' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Active...']],
+                'typeProduct' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Type Product...']],
+                'unit' => [
+                        'type' => Form::INPUT_WIDGET,
+                        'widgetClass' => 'kartik\select2\Select2',
+                        'options' => [
+                            'data' => Products::$unitCategories,
+                            'options' => [
+                                'placeholder' => 'Select Item',
+                                'required' => false,
+                                'class' => 'form-control'
+                            ],
+                            'pluginOptions' => [
+                                'allowClear' => true
+                            ],
+                        ]
+                    ],
+                'active' => [
+                    'type' => Form::INPUT_WIDGET,
+                    'widgetClass' => 'kartik\select2\Select2',
+                    'options' => [
+                        'data' => Products::$activeCategories,
+                        'options' => [
+                            'placeholder' => 'Select Item',
+                            'required' => false,
+                            'class' => 'form-control'
+                        ],
+                        'pluginOptions' => [
+                            'allowClear' => true
+                        ],
+                    ]
+                ],
             ],
         ]);
         ?>

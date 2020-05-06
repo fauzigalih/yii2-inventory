@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use app\widgets\ToolbarFilterButton;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -11,7 +12,6 @@ $this->title = $page . ' - ' . Yii::$app->name;
 $this->params['breadcrumbs'][] = $page;
 ?>
 <div class="products-index">
-
     <h1><?= Html::encode('') ?></h1>
     <div id="search-modal" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
@@ -48,7 +48,12 @@ $this->params['breadcrumbs'][] = $page;
             'nameProduct',
             'typeProduct',
             'unit',
-            'price',
+            [
+                'attribute' => 'price',
+                'value' => function($model){
+                    return 'Rp. ' . number_format($model->price,0,',','.');
+                }
+            ],
             [
                 'attribute' => 'imageProduct',
                 'format' => 'html',
@@ -61,6 +66,10 @@ $this->params['breadcrumbs'][] = $page;
             'stockIn',
             'stockOut',
             'stockFinal',
+            [
+                'attribute' => 'datePublished',
+                'format' => ['date', 'dd-MM-Y']
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => 'Action'

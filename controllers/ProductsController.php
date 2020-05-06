@@ -61,7 +61,7 @@ class ProductsController extends Controller {
      */
     public function actionView($id) {
         $model = $this->findModel($id);
-
+        
         return $this->render('view',
                 [
                     'model' => $model,
@@ -78,7 +78,7 @@ class ProductsController extends Controller {
 
         if ($model->load(Yii::$app->request->post())) {
             if (!$model->save()) {
-                return $this->goHome();
+                return $this->redirect('create');
             }
             return $this->redirect(['index']);
         }

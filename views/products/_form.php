@@ -29,10 +29,25 @@ $displayFile = !$isActionCreate ? Yii::getAlias("@web/img/product/$model->imageP
                 'form' => $form,
                 'columns' => 3,
                 'attributes' => [
-                    'invoice' => ['type' => Form::INPUT_TEXT, 'options' => ['disabled' => $isDisabled]],
+                    'invoice' => ['type' => Form::INPUT_TEXT, 'options' => ['value' => $model->invoiceData, 'readonly' => $isActionCreate, 'disabled' => $isDisabled]],
                     'nameProduct' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Name Product...', 'disabled' => $isDisabled]],
                     'typeProduct' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Type Product...', 'disabled' => $isDisabled]],
-                    'unit' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Unit...', 'disabled' => $isDisabled]],
+                    'unit' => [
+                        'type' => Form::INPUT_WIDGET,
+                        'widgetClass' => 'kartik\select2\Select2',
+                        'options' => [
+                            'data' => Products::$unitCategories,
+                            'disabled' => $isDisabled,
+                            'options' => [
+                                'placeholder' => 'Select Item',
+                                'required' => false,
+                                'class' => 'form-control'
+                            ],
+                            'pluginOptions' => [
+                                'allowClear' => true
+                            ],
+                        ]
+                    ],
                     'price' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Price...', 'disabled' => $isDisabled]],
                     'stockFirst' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Stock...', 'disabled' => $isDisabled]],
                     '_imageProduct' => [

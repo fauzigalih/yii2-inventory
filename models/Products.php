@@ -28,15 +28,21 @@ use yii\helpers\FileHelper;
  * @property int|null $active
  */
 class Products extends ActiveRecord {
-    public $_imageProduct;
+    public $_imageProduct = false;
 
-    const STATUS_ACTIVE = 1;
-    const STATUS_INACTIVE = 0;
+    const STATUS_ACTIVE = 10;
+    const STATUS_INACTIVE = 9;
     const DEFAULT_VALUE_NULL = 0;
 
     public static $activeCategories = [
         self::STATUS_ACTIVE => "ACTIVE",
         self::STATUS_INACTIVE => "NOT ACTIVE"
+    ];
+    
+    public static $unitCategories = [
+        'Unit' => 'Unit',
+        'Pcs' => 'Pcs',
+        'Dus' => 'Dus',
     ];
 
     /**
@@ -51,7 +57,7 @@ class Products extends ActiveRecord {
      */
     public function rules() {
         return [
-            [['nameProduct', 'typeProduct', 'unit', 'price', 'stockFirst', 'imageProduct', '_imageProduct'], 'required'],
+            [['invoice', 'nameProduct', 'typeProduct', 'unit', 'price', 'stockFirst', 'imageProduct', '_imageProduct'], 'required'],
             [['price', 'stockFirst', 'stockIn', 'stockOut', 'stockFinal', 'active'], 'integer'],
             [['invoice', 'nameProduct', 'typeProduct', 'unit', 'imageProduct'], 'string', 'max' => 45],
             [['datePublished'], 'default', 'value' => date('Y-m-d')],
@@ -101,6 +107,8 @@ class Products extends ActiveRecord {
                 $transaction->rollBack();
                 return false;
             }
+            
+            $this->_imageProduct = true;
             $this->imageProduct = $fileName;
             $this->stockFinal = $this->stockFirst;
 
@@ -118,6 +126,7 @@ class Products extends ActiveRecord {
         $query = self::find()
             ->andFilterWhere(['like', 'invoice', $this->invoice])
             ->andFilterWhere(['like', 'nameProduct', $this->nameProduct])
+            ->andFilterWhere(['like', 'typeProduct', $this->typeProduct])
             ->andFilterWhere(['like', 'unit', $this->unit])
             ->andFilterWhere(['=', 'active', $this->active]);
 
@@ -129,6 +138,16 @@ class Products extends ActiveRecord {
         ]);
 
         return $dataProvider;
+    }
+
+    public function getInvoiceData() {
+        $query = self::find()->max('invoice');
+        $noInvoice = (int) substr($query, 3, 3);
+        $noInvoice++;
+        $charInvoice = "INV";
+        $newInvoice = $charInvoice . sprintf("%03s", $noInvoice);
+        
+        return $newInvoice;
     }
 
 }
