@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $page;
                 'attribute' => 'imageProduct',
                 'format' => 'html',
                 'value' => function($model) {
-                    return Html::img(Yii::getAlias("@web/img/product/$model->imageProduct"),
+                    return Html::img(Yii::getAlias('@web/img/product/'.$model->imageProduct),
                             ['width' => '80px', 'height' => '50px']);
                 }
             ],
