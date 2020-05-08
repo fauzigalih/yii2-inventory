@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\ProductIn;
+use app\models\Products;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -24,7 +25,7 @@ class ProductInController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['logout', 'index', 'create', 'view', 'update'],
+                        'actions' => ['logout', 'index', 'create', 'view', 'update', 'delete'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -76,6 +77,7 @@ class ProductInController extends Controller
     public function actionCreate()
     {
         $model = new ProductIn();
+//        $modelProducts = Products::findOne($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);

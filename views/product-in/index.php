@@ -43,10 +43,34 @@ $this->params['breadcrumbs'][] = $page;
                 'header' => 'No.'
             ],
             'invoice',
-            'nameProduct',
-            'unit',
-            'qty',
-            'price',
+            [
+                'attribute' => 'user',
+                'value' => function($model){
+                    return $model->user->fullName;
+                } 
+            ],
+            [
+                'attribute' => 'nameProduct',
+                'value' => function($model){
+                    return $model->products->nameProduct ?? null;
+                }
+            ],
+            [
+                'attribute' => 'unit',
+                'value' => function($model){
+                    return $model->products->unit ?? null;
+                }
+            ],
+            'qtyIn',
+            [
+                'attribute' => 'imageProduct',
+                'format' => 'html',
+                'value' => function($model){
+                    return Html::img(Yii::getAlias('@web/img/product/'.$model->products->imageProduct),
+                        ['width' => '80px', 'height' => '50px']);
+                }
+            ],
+            'datePublished',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => 'Action'

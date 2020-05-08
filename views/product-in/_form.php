@@ -28,23 +28,11 @@ $isDisabled = Yii::$app->controller->action->id == 'view';
                 'form' => $form,
                 'columns' => 3,
                 'attributes' => [
-                    'invoice' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Code Product...', 'disabled' => $isDisabled]],
-                    'nameProduct' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Name Product...', 'disabled' => $isDisabled]],
-//                    'unit' => [
-//                        'type' => Form::INPUT_WIDGET,
-//                        'widgetClass' => 'kartik\select2\Select2',
-//                        'options' => [
-//                            'data' => ProductIn::$unitCategories,
-//                            'disabled' => $isDisabled,
-//                            'options' => [
-//                                'placeholder' => 'Pilih',
-//                                'class' => 'form-control'
-//                            ],
-//                            'pluginOptions' => [
-//                                'allowClear' => true
-//                            ],
-//                        ],
-//                    ],
+                    'invoice' => ['type' => Form::INPUT_TEXT, 'options' => ['value' => $model->invoiceData, 'readonly' => true, 'disabled' => $isDisabled]],
+                    '_invoice' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Invoice Product...', 'disabled' => $isDisabled]],
+                    'nameProduct' => ['type' => Form::INPUT_TEXT, 'options' => ['readonly' => true, 'placeholder' => 'Enter Name Product...', 'disabled' => $isDisabled]],
+                    'unit' => ['type' => Form::INPUT_TEXT, 'options' => ['readonly' => true, 'placeholder' => 'Enter Name Product...', 'disabled' => $isDisabled]],
+                    'qtyIn' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Name Product...', 'disabled' => $isDisabled]],
                   ],
             ]);
             ?>
@@ -52,9 +40,10 @@ $isDisabled = Yii::$app->controller->action->id == 'view';
                 <?=
                 Html::resetButton('Reset', ['class' => 'btn btn-default']) . ' ' .
                 Html::a('Back', Yii::$app->request->referrer,
-                    ['class' => 'btn btn-danger']) . ' ' .
-                Html::submitButton('Submit',
-                    ['type' => 'button', 'class' => 'btn btn-primary'])
+                    ['class' => 'btn btn-danger']) . ' ' ?>
+                <?php if (!$isDisabled) {
+                echo Html::submitButton('Submit',
+                    ['type' => 'button', 'class' => 'btn btn-primary']); }
                 ?>
             </div>
             <?php ActiveForm::end(); ?>
