@@ -1,5 +1,4 @@
 <?php
-
 use app\models\User;
 use yii\helpers\Html;
 use kartik\grid\GridView;
@@ -14,14 +13,14 @@ $this->params['breadcrumbs'][] = $page;
 $this->title = $page . '- ' . Yii::$app->name;
 ?>
 <div class="user-index">
-
+    <?php Pjax::begin() ?>
     <h1><?= Html::encode('') ?></h1>
     <div id="search-modal" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class='modal-body no-padding'>
-                    <?= $this->render('_search',
-                        ['model' => $model])
+                    <?=
+                    $this->render('_search', ['model' => $model])
                     ?>
                 </div>
             </div>
@@ -71,6 +70,5 @@ $this->title = $page . '- ' . Yii::$app->name;
         ],
     ]);
     ?>
-<?php Pjax::end() ?>
-
+    <?php Pjax::end() ?>
 </div>
