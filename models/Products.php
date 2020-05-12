@@ -7,6 +7,7 @@ use yii\db\ActiveRecord;
 use yii\data\ActiveDataProvider;
 use yii\web\UploadedFile;
 use yii\helpers\FileHelper;
+use yii\helpers\ArrayHelper;
 
 //use function sanitizeFileName;
 
@@ -28,7 +29,7 @@ use yii\helpers\FileHelper;
  * @property int|null $active
  */
 class Products extends ActiveRecord {
-    public $_imageProduct = false;
+    public $_imageProduct;
 
     const STATUS_ACTIVE = 10;
     const STATUS_INACTIVE = 9;
@@ -38,7 +39,6 @@ class Products extends ActiveRecord {
         self::STATUS_ACTIVE => "ACTIVE",
         self::STATUS_INACTIVE => "NOT ACTIVE"
     ];
-    
     public static $unitCategories = [
         'Unit' => 'Unit',
         'Pcs' => 'Pcs',
@@ -57,12 +57,12 @@ class Products extends ActiveRecord {
      */
     public function rules() {
         return [
-            [['invoice', 'nameProduct', 'typeProduct', 'unit', 'price', 'stockFirst', 'imageProduct', '_imageProduct'], 'required'],
+            [['invoice', 'nameProduct', 'typeProduct', 'unit', 'price', 'stockFirst', 'imageProduct'], 'required'],
             [['price', 'stockFirst', 'stockIn', 'stockOut', 'stockFinal', 'active'], 'integer'],
             [['invoice', 'nameProduct', 'typeProduct', 'unit', 'imageProduct'], 'string', 'max' => 45],
             [['datePublished'], 'default', 'value' => date('Y-m-d')],
             [['stockIn', 'stockOut'], 'default', 'value' => self::DEFAULT_VALUE_NULL],
-            ['active', 'default', 'value' => self::STATUS_ACTIVE]
+            ['active', 'default', 'value' => self::STATUS_ACTIVE],
         ];
     }
 
@@ -87,37 +87,29 @@ class Products extends ActiveRecord {
         ];
     }
 
-    public function save($runValidation = true, $attributeNames = null) {
-        $baseUrl = Yii::$app->request->baseUrl;
-        $transaction = Yii::$app->db->beginTransaction();
-
+    public function uploadImage() {
         $uploadedFile = UploadedFile::getInstance($this, '_imageProduct');
+        $update = Yii::$app->controller->action->id == 'update';
         if ($uploadedFile) {
             $fileDir = Yii::getAlias('@webroot/img/product');
             if (!file_exists($fileDir))
                 FileHelper::createDirectory($fileDir);
 
-            if ($this->_imageProduct != $this->imageProduct)
-                unlink("$fileDir/$this->imageProduct");
-
+            if ($update && ($this->_imageProduct != $this->imageProduct)){
+                $this->stockFinal = $this->stockFirst + $this->stockIn - $this->stockOut;
+                unlink(Yii::getAlias("@webroot/img/product/$this->imageProduct"));
+            }
             date_default_timezone_set('Asia/Jakarta');
             $dateTime = date('dmYHis');
             $fileName = strtolower("$this->nameProduct" . "_$this->invoice" . "_$dateTime." . $uploadedFile->extension);
             if (!$uploadedFile->saveAs("$fileDir/$fileName")) {
-                $transaction->rollBack();
                 return false;
             }
-            
-            $this->_imageProduct = true;
             $this->imageProduct = $fileName;
-            $this->stockFinal = $this->stockFirst;
 
-            if (!parent::save($runValidation, $attributeNames)) {
-                $transaction->rollBack();
-                return false;
-            }
-
-            $transaction->commit();
+            return true;
+        } else if ($update) {
+            $this->stockFinal = $this->stockFirst + $this->stockIn - $this->stockOut;
             return true;
         }
     }
@@ -146,8 +138,16 @@ class Products extends ActiveRecord {
         $noInvoice++;
         $charInvoice = "INV";
         $newInvoice = $charInvoice . sprintf("%03s", $noInvoice);
-        
+
         return $newInvoice;
+    }
+
+    public static function getListName() {
+        return ArrayHelper::map(self::find()->all(), 'id', 'nameProduct');
+    }
+
+    public static function getListInvoice() {
+        return ArrayHelper::map(self::find()->all(), 'id', 'invoice');
     }
 
 }
