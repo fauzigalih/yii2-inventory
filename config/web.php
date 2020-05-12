@@ -50,7 +50,7 @@ $config = [
             'rules' => [
                 '<controller:\w+>/<id:\d+>' => '<controller>',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-                '<controller:\w+>/<action:\w+>/<page:\d+>/<per-page:\d+>' => '<controller>/<action>',
+//                '<controller:\w+>/<action:\w+>/<page:\d+>/<per-page:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ],
         ],
