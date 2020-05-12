@@ -29,7 +29,7 @@ $displayFile = !$isActionCreate ? Yii::getAlias("@web/img/product/$model->imageP
                 'form' => $form,
                 'columns' => 3,
                 'attributes' => [
-                    'invoice' => ['type' => Form::INPUT_TEXT, 'options' => ['value' => $model->invoiceData, 'readonly' => $isActionCreate, 'disabled' => $isDisabled]],
+                    'invoice' => ['type' => Form::INPUT_TEXT, 'options' => ['value' => $model->invoiceData, 'readonly' => true, 'disabled' => $isDisabled]],
                     'nameProduct' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Name Product...', 'disabled' => $isDisabled]],
                     'typeProduct' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Type Product...', 'disabled' => $isDisabled]],
                     'unit' => [
