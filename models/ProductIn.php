@@ -42,7 +42,7 @@ class ProductIn extends ActiveRecord {
      */
     public function rules() {
         return [
-            [['invoice', 'userId', 'productId', 'qtyIn', '_invoice'], 'required'],
+            [['invoice', 'userId', 'productId', 'qtyIn'], 'required'],
             [['userId', 'productId', 'qtyIn'], 'integer'],
             [['invoice'], 'string', 'max' => 45],
             [['datePublished'], 'default', 'value' => date('Y-m-d')],
@@ -105,18 +105,11 @@ class ProductIn extends ActiveRecord {
         return $newInvoice;
     }
     
-    public function save($runValidation = true, $attributeNames = null) {
-        $transaction = Yii::$app->db->beginTransaction();
-        
-        $this->userId = Yii::$app->user->identity->id;
-        $this->productId = $this->productsId->id;
-        
-        if(!parent::save($runValidation, $attributeNames)){
-            $transaction->rollBack();
-            return false;
-        }
-        
-        $transaction->commit();
-        return true;
-    }
+//    public function getSumProduct(){
+//        $modelProduct = Products::find()->where('=', 'id', $this->productId)->one();
+//        $modelProduct->stockIn += $this->qtyIn;
+//        $modelProduct->stockFinal = $modelProduct->stockFirst + $modelProduct->stockIn - $modelProduct->stockOut;
+//        return $modelProduct->save();
+//    }
+    
 }
