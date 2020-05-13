@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\helpers\Json;
 
 /**
  * ProductInController implements the CRUD actions for ProductIn model.
@@ -77,15 +78,17 @@ class ProductInController extends Controller
     public function actionCreate()
     {
         $model = new ProductIn();
-//        $modelProducts = Products::findOne($id);
+        $controller = $this;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->userId = Yii::$app->user->identity->id;
+            if(!$model->save()){
+                return $controller->render('create', ['model' => $model]);
+            }
             return $this->redirect(['index']);
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        
+        return $controller->render('create', ['model' => $model]);
     }
 
     /**
@@ -121,6 +124,19 @@ class ProductInController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+    
+    public function actionList($id){
+        $countInvoice = Products::find()->where(['id' => $id])->count();
+        $invoices = Products::find()->where(['id' => $id])->all();
+        
+        if($countInvoice > 0){
+            foreach ($invoices as $invoice) {
+                echo '<input type="text" value="'.$invoice->invoice.'">';
+            }
+        }else{
+            echo '<input type="text" placeholder="Enter Name Product...">';
+        }
     }
 
     /**
