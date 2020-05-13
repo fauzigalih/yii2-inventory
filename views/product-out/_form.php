@@ -1,4 +1,5 @@
 <?php
+use app\models\Products;
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use kartik\builder\Form;
@@ -26,7 +27,24 @@ $isDisabled = Yii::$app->controller->action->id == 'view';
                 'form' => $form,
                 'columns' => 3,
                 'attributes' => [
-                    'invoice' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Code Product...']],
+                    'invoice' => ['type' => Form::INPUT_TEXT, 'options' => ['value' => $model->invoiceData, 'readonly' => true, 'disabled' => $isDisabled]],
+                    'productId' => [
+                        'type' => Form::INPUT_WIDGET,
+                        'widgetClass' => 'kartik\select2\Select2',
+                        'options' => [
+                            'data' => Products::getListInvoice(),
+                            'disabled' => $isDisabled,
+                            'options' => [
+                                'placeholder' => 'Pilih',
+                                'required' => false,
+                                'class' => 'form-control'
+                            ],
+                            'pluginOptions' => [
+                                'allowClear' => true
+                            ],
+                        ],
+                    ],
+                    'qtyOut' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Name Product...', 'disabled' => $isDisabled]],
                 ],
             ]);
             ?>

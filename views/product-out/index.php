@@ -44,11 +44,41 @@ $this->params['breadcrumbs'][] = $page;
                 'class' => 'yii\grid\SerialColumn',
                 'header' => 'No.'
             ],
-            'codeProduct',
-            'nameProduct',
-            'unit',
-            'qty',
-            'price',
+            'invoice',
+            [
+                'attribute' => 'user',
+                'value' => function($model) {
+                    return $model->user->fullName ?? null;
+                }
+            ],
+            [
+                'attribute' => 'nameProduct',
+                'value' => function($model) {
+                    return $model->products->nameProduct ?? null;
+                }
+            ],
+            [
+                'attribute' => 'unit',
+                'value' => function($model) {
+                    return $model->products->unit ?? null;
+                }
+            ],
+            'qtyOut',
+            [
+                'attribute' => 'price',
+                'value' => function($model) {
+                    return 'Rp. ' . number_format($model->products->price, 0, ',', '.');
+                }
+            ],
+            [
+                'attribute' => 'imageProduct',
+                'format' => 'html',
+                'value' => function($model) {
+                    return Html::img(Yii::getAlias('@web/img/product/' . $model->products->imageProduct),
+                            ['width' => '80px', 'height' => '50px']);
+                }
+            ],
+            'datePublished',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => 'Action'
