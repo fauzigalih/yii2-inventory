@@ -42,6 +42,7 @@ class ProductOut extends ActiveRecord
             [['invoice', 'userId', 'productId', 'qtyOut'], 'required'],
             [['userId', 'productId', 'qtyOut'], 'integer'],
             [['invoice'], 'string', 'max' => 45],
+            [['datePublished'], 'default', 'value' => date('Y-m-d')],
         ];
     }
 
@@ -75,5 +76,23 @@ class ProductOut extends ActiveRecord
         ]);
 
         return $dataProvider;
+    }
+    
+    public function getProducts(){
+        return $this->hasOne(Products::className(), ['id' => 'productId']);
+    }
+    
+    public function getInvoiceData() {
+        $query = self::find()->max('invoice');
+        $noInvoice = (int) substr($query, 3, 3);
+        $noInvoice++;
+        $charInvoice = "POT";
+        $newInvoice = $charInvoice . sprintf("%03s", $noInvoice);
+        
+        return $newInvoice;
+    }
+    
+    public function getUser(){
+        return $this->hasOne(User::className(), ['id' => 'userId']);
     }
 }
