@@ -17,7 +17,8 @@ $this->params['breadcrumbs'][] = $page;
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class='modal-body no-padding'>
-                    <?= $this->render('_search', ['model' => $model]) ?>
+                    <?= $this->render('_search',
+                        ['model' => $model]) ?>
                 </div>
             </div>
         </div>
@@ -45,29 +46,35 @@ $this->params['breadcrumbs'][] = $page;
             'invoice',
             [
                 'attribute' => 'user',
-                'value' => function($model){
-                    return $model->user->fullName;
-                } 
+                'value' => function($model) {
+                    return $model->user->fullName ?? null;
+                }
             ],
             [
                 'attribute' => 'nameProduct',
-                'value' => function($model){
+                'value' => function($model) {
                     return $model->products->nameProduct ?? null;
                 }
             ],
             [
                 'attribute' => 'unit',
-                'value' => function($model){
+                'value' => function($model) {
                     return $model->products->unit ?? null;
                 }
             ],
             'qtyIn',
             [
+                'attribute' => 'price',
+                'value' => function($model) {
+                    return 'Rp. ' . number_format($model->products->price, 0, ',', '.');
+                }
+            ],
+            [
                 'attribute' => 'imageProduct',
                 'format' => 'html',
-                'value' => function($model){
-                    return Html::img(Yii::getAlias('@web/img/product/'.$model->products->imageProduct),
-                        ['width' => '80px', 'height' => '50px']);
+                'value' => function($model) {
+                    return Html::img(Yii::getAlias('@web/img/product/' . $model->products->imageProduct),
+                            ['width' => '80px', 'height' => '50px']);
                 }
             ],
             'datePublished',
