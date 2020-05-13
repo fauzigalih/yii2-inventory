@@ -76,13 +76,15 @@ class ProductOutController extends Controller
     {
         $model = new ProductOut();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $model->userId = Yii::$app->user->identity->id;
+            if(!$model->save()){
+                return $this->goHome();
+            }
             return $this->redirect(['index']);
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return $this->render('create', ['model' => $model]);
     }
 
     /**
