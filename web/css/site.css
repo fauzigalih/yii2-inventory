@@ -165,3 +165,13 @@ a.desc:after {
     /*background: #555;*/ 
     background: #4E97C2;
 }
+
+.img-circle {
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+}
+
+.main-header .logo {
+    height: 55px!important;
+}
