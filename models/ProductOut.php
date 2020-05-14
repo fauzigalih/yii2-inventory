@@ -95,4 +95,11 @@ class ProductOut extends ActiveRecord
     public function getUser(){
         return $this->hasOne(User::className(), ['id' => 'userId']);
     }
+    
+    public function sumProduct($dataQty, $dataProduct){
+        $modelProduct = Products::findOne(['id' => $dataProduct]);
+        $modelProduct->stockOut += $dataQty;
+        $modelProduct->stockFinal = $modelProduct->stockFirst + $modelProduct->stockIn - $modelProduct->stockOut;
+        return $modelProduct->save();
+    }
 }
