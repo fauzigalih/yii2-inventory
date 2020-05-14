@@ -5,7 +5,6 @@ namespace app\models;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\data\ActiveDataProvider;
-use app\models\Products;
 
 /**
  * This is the model class for table "product_in".
@@ -105,11 +104,11 @@ class ProductIn extends ActiveRecord {
         return $newInvoice;
     }
     
-//    public function getSumProduct(){
-//        $modelProduct = Products::find()->where('=', 'id', $this->productId)->one();
-//        $modelProduct->stockIn += $this->qtyIn;
-//        $modelProduct->stockFinal = $modelProduct->stockFirst + $modelProduct->stockIn - $modelProduct->stockOut;
-//        return $modelProduct->save();
-//    }
+    public function sumProduct($dataQty, $dataProduct){
+        $modelProduct = Products::findOne(['id' => $dataProduct]);
+        $modelProduct->stockIn += $dataQty;
+        $modelProduct->stockFinal = $modelProduct->stockFirst + $modelProduct->stockIn - $modelProduct->stockOut;
+        return $modelProduct->save();
+    }
     
 }
