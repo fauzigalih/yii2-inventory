@@ -14,13 +14,11 @@ use yii\helpers\Json;
 /**
  * ProductInController implements the CRUD actions for ProductIn model.
  */
-class ProductInController extends Controller
-{
+class ProductInController extends Controller {
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -45,14 +43,14 @@ class ProductInController extends Controller
      * Lists all ProductIn models.
      * @return mixed
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         $model = new ProductIn();
-        
+
         $model->load(Yii::$app->request->get());
 
-        return $this->render('index', [
-            'model' => $model,
+        return $this->render('index',
+                [
+                'model' => $model,
         ]);
     }
 
@@ -62,11 +60,10 @@ class ProductInController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
+    public function actionView($id) {
+        return $this->render('view',
+                [
+                    'model' => $this->findModel($id),
         ]);
     }
 
@@ -75,20 +72,20 @@ class ProductInController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
+    public function actionCreate() {
         $model = new ProductIn();
-        $controller = $this;
 
         if ($model->load(Yii::$app->request->post())) {
             $model->userId = Yii::$app->user->identity->id;
-            if(!$model->save()){
-                return $controller->render('create', ['model' => $model]);
+            $dataQty = $model->qtyIn;
+            $dataProduct = $model->productId;
+            if (!($model->sumProduct($dataQty, $dataProduct) && $model->save())) {
+                return $this->render('create', ['model' => $model]);
             }
             return $this->redirect(['index']);
         }
-        
-        return $controller->render('create', ['model' => $model]);
+
+        return $this->render('create', ['model' => $model]);
     }
 
     /**
@@ -98,18 +95,29 @@ class ProductInController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $model = $this->findModel($id);
+        $dataQty = $model->qtyIn;
+        $dataProduct = $model->productId;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            if($dataProduct != $model->productId){
+                $model->sumProduct($model->qtyIn, $model->productId);
+                $dataQty = 0 - $dataQty;
+            }else{
+                if ($dataQty != $model->qtyIn){
+                    $dataQty = $model->qtyIn - $dataQty;
+                } else {
+                    $dataQty = 0;
+                }
+            }
+            if(!($model->sumProduct($dataQty, $dataProduct) && $model->save())){
+                return $this->render('update', ['model' => $model]);
+            }
             return $this->redirect(['index']);
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        return $this->render('update', ['model' => $model]);
     }
 
     /**
@@ -119,22 +127,21 @@ class ProductInController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
-    {
+    public function actionDelete($id) {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
-    
-    public function actionList($id){
+
+    public function actionList($id) {
         $countInvoice = Products::find()->where(['id' => $id])->count();
         $invoices = Products::find()->where(['id' => $id])->all();
-        
-        if($countInvoice > 0){
+
+        if ($countInvoice > 0) {
             foreach ($invoices as $invoice) {
-                echo '<input type="text" value="'.$invoice->invoice.'">';
+                echo '<input type="text" value="' . $invoice->invoice . '">';
             }
-        }else{
+        } else {
             echo '<input type="text" placeholder="Enter Name Product...">';
         }
     }
@@ -146,12 +153,12 @@ class ProductInController extends Controller
      * @return ProductIn the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
+    protected function findModel($id) {
         if (($model = ProductIn::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
 }
