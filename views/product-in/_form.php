@@ -15,7 +15,8 @@ $this->title = $titlePage . ' - ' . Yii::$app->name;
 $this->params['breadcrumbs'][] = ['label' => $page, 'url' => ['index']];
 $this->params['breadcrumbs'][] = $titlePage;
 
-$isDisabled = Yii::$app->controller->action->id == 'view';
+$isDisabled = Yii::$app->controller->action->id == ('view');
+$isCreate = Yii::$app->controller->action->id == ('create');
 
 ?>
 
