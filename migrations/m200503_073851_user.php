@@ -21,6 +21,7 @@ class m200503_073851_user extends Migration
             'authKey' => $this->string(255)->notNull(),
             'accessToken' => $this->string(255),
             'role' => $this->integer(11)->notNull(),
+            'imageUser' => $this->string(50)->notNull(),
             'active' => $this->integer(11)->notNull()
         ]);
         
@@ -31,6 +32,7 @@ class m200503_073851_user extends Migration
             'authKey' => 'eCDSVGMu92s7-A13HKqd1u4xBQnMSExo',
             'accessToken' => null,
             'role' => User::ROLE_ADMIN,
+            'imageUser' => 'default.png',
             'active' => User::STATUS_ACTIVE
         ]);
     }
