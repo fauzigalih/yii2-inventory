@@ -1,6 +1,7 @@
 <?php
 
 use app\models\User;
+use yii\helpers\Html;
 ?>
 <aside class="main-sidebar">
 
@@ -9,7 +10,8 @@ use app\models\User;
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="<?= $directoryAsset ?>/img/user2-160x160.jpg" class="img-circle" alt="User Image"/>
+<!--                <img src="<?= $directoryAsset ?>/img/user/default.png" class="img-circle" alt="User Image"/>-->
+                <?= Html::img($imgUser.Yii::$app->user->identity->imageUser ?? $imgUser.'default.png', ['class' => 'img-circle', 'alt' => 'User Image']) ?>
             </div>
             <div class="pull-left info">
                 <p><?= Yii::$app->user->identity->fullName ?></p>
@@ -54,5 +56,4 @@ use app\models\User;
         ?>
 
     </section>
-
 </aside>

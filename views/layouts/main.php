@@ -27,6 +27,7 @@ if ($actionId === 'login' || $actionId === 'register') {
     dmstr\web\AdminLteAsset::register($this);
 
     $directoryAsset = Yii::$app->assetManager->getPublishedUrl('@vendor/almasaeed2010/adminlte/dist');
+    $imgUser = Yii::getAlias('@web/img/user/');
     ?>
     <?php $this->beginPage() ?>
     <!DOCTYPE html>
@@ -45,12 +46,12 @@ if ($actionId === 'login' || $actionId === 'register') {
 
         <?= $this->render(
             'header.php',
-            ['directoryAsset' => $directoryAsset]
+            ['directoryAsset' => $directoryAsset, 'imgUser' => $imgUser]
         ) ?>
 
         <?= $this->render(
             'left.php',
-            ['directoryAsset' => $directoryAsset]
+            ['directoryAsset' => $directoryAsset, 'imgUser' => $imgUser]
         )
         ?>
 
