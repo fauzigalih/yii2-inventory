@@ -6,6 +6,7 @@ use kartik\builder\Form;
 use yii\helpers\Html;
 use yii\web\View;
 use app\models\Products;
+use kartik\date\DatePicker;
 
 /* @var $this View */
 /* @var $model MsUser */
@@ -18,8 +19,6 @@ use app\models\Products;
     <div class="panel-body">
         <?php
         $form = ActiveForm::begin([
-                'enableAjaxValidation' => false,
-                'enableClientValidation' => false,
                 'method' => 'GET',
                 'action' => ['index'],
                 'type' => ActiveForm::TYPE_VERTICAL,
@@ -31,9 +30,23 @@ use app\models\Products;
         echo Form::widget([
             'model' => $model,
             'form' => $form,
-            'columns' => 3,
+            'columns' => 4,
             'attributes' => [
-                'invoice' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Code Product...']],
+                'invoice' => [
+                        'type' => Form::INPUT_WIDGET,
+                        'widgetClass' => 'kartik\select2\Select2',
+                        'options' => [
+                            'data' => Products::getListInvoice(),
+                            'options' => [
+                                'placeholder' => 'Select Item',
+                                'required' => false,
+                                'class' => 'form-control'
+                            ],
+                            'pluginOptions' => [
+                                'allowClear' => true
+                            ],
+                        ]
+                    ],
                 'nameProduct' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Name Product...']],
                 'typeProduct' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Type Product...']],
                 'unit' => [
@@ -51,6 +64,31 @@ use app\models\Products;
                             ],
                         ]
                     ],
+                'price' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Price...']],
+                'stockFirst' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Stock First...']],
+                'stockIn' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Stock In...']],
+                'stockOut' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Stock Out...']],
+                'stockFinal' => ['type' => Form::INPUT_TEXT, 'options' => ['placeholder' => 'Enter Stock Final...']],
+                'fromDate' => [
+                    'type' => Form::INPUT_WIDGET, 
+                    'widgetClass' => 'kartik\date\DatePicker', 
+                    'options' => [
+                        'pluginOptions' => [
+                            'autoclose' => true,
+                            'format' => 'yyyy-mm-dd'
+                        ]
+                    ]
+                ],
+                'toDate' => [
+                    'type' => Form::INPUT_WIDGET, 
+                    'widgetClass' => 'kartik\date\DatePicker', 
+                    'options' => [
+                        'pluginOptions' => [
+                            'autoclose' => true,
+                            'format' => 'yyyy-mm-dd'
+                        ]
+                    ]
+                ],
                 'active' => [
                     'type' => Form::INPUT_WIDGET,
                     'widgetClass' => 'kartik\select2\Select2',
