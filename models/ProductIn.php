@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "product_in".
@@ -17,10 +18,14 @@ use yii\data\ActiveDataProvider;
  * @property date $datePublished
  */
 class ProductIn extends ActiveRecord {
-    public $_invoice;
+    public $fullName;
     public $nameProduct;
+    public $typeProduct;
     public $unit;
-    public $imageProduct;
+    public $price;
+    public $active;
+    public $fromDate;
+    public $toDate;
     
     public static $unitCategories = [
         'Pcs' => 'Pcs',
@@ -41,11 +46,11 @@ class ProductIn extends ActiveRecord {
      */
     public function rules() {
         return [
-            [['invoice', 'userId', 'productId', 'qtyIn'], 'required'],
+//            [['invoice', 'userId', 'productId', 'qtyIn'], 'required'],
             [['userId', 'productId', 'qtyIn'], 'integer'],
             [['invoice'], 'string', 'max' => 45],
             [['datePublished'], 'default', 'value' => date('Y-m-d')],
-            [['nameProduct', 'unit', 'imageProduct'], 'safe'],
+            [['datePublished', 'fullName', 'nameProduct', 'typeProduct', 'unit', 'price', 'active', 'fromDate', 'toDate'], 'safe'],
         ];
     }
 
@@ -60,22 +65,50 @@ class ProductIn extends ActiveRecord {
             'productId' => 'Product',
             'qtyIn' => 'Qty',
             'datePublished' => 'Date Published',
-            '_invoice' => 'Invoice Product',
         ];
     }
 
     public function search() {
+        $fromDate = $this->fromDate;
+        $toDate = $this->toDate;
+        if($fromDate == '') {
+            $fromDate = '';
+            $toDate = '';
+        }else if($toDate == ''){
+            $toDate = $this->fromDate;
+        }
         $query = self::find()
-            ->andFilterWhere(['like', 'invoice', $this->invoice])
-            ->andFilterWhere(['like', 'userId', $this->userId])
-            ->andFilterWhere(['like', 'productId', $this->productId])
-            ->andFilterWhere(['like', 'qtyIn', $this->qtyIn]);
+            ->joinWith('user')
+            ->joinWith('products')
+            ->andFilterWhere(['like', 'product_in.invoice', $this->invoice])
+            ->andFilterWhere(['like', 'user.fullName', $this->fullName])
+            ->andFilterWhere(['like', 'products.nameProduct', $this->nameProduct])
+            ->andFilterWhere(['like', 'products.typeProduct', $this->typeProduct])
+            ->andFilterWhere(['like', 'products.unit', $this->unit])
+            ->andFilterWhere(['=', 'product_in.qtyIn', $this->qtyIn])
+            ->andFilterWhere(['=', 'products.price', $this->price])
+            ->andFilterWhere(['like', 'products.active', $this->active])
+            ->andFilterWhere(['between', 'product_in.datePublished', $fromDate, $toDate]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
                 'pageSize' => 8
-            ]
+            ],
+            'sort' => [
+                'attributes' => [
+                    'invoice' => 'invoice',
+                    'user.fullName' => 'user.fullName',
+                    'products.nameProduct' => 'products.nameProduct',
+                    'products.typeProduct' => 'products.typeProduct',
+                    'products.unit' => 'products.unit',
+                    'qtyIn' => 'qtyIn',
+                    'products.price' => 'products.price',
+                    'products.imageProduct' => 'products.imageProduct',
+                    'datePublished' => 'datePublished',
+                    'products.active' => 'products.active'
+                ]
+            ],
         ]);
 
         return $dataProvider;
@@ -87,11 +120,6 @@ class ProductIn extends ActiveRecord {
     
     public function getProducts(){
         return $this->hasOne(Products::className(), ['id' => 'productId']);
-    }
-
-    public function getProductsId(){
-        $query = Products::find()->where(['invoice' => $this->_invoice])->one();
-        return $query;
     }
     
     public function getInvoiceData() {
@@ -109,6 +137,10 @@ class ProductIn extends ActiveRecord {
         $modelProduct->stockIn += $dataQty;
         $modelProduct->stockFinal = $modelProduct->stockFirst + $modelProduct->stockIn - $modelProduct->stockOut;
         return $modelProduct->save();
+    }
+    
+    public static function getListInvoice() {
+        return ArrayHelper::map(self::find()->all(), 'id', 'invoice');
     }
     
 }
