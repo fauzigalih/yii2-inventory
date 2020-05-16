@@ -10,9 +10,9 @@ use yii\data\ActiveDataProvider;
  * This is the model class for table "transaction".
  *
  * @property int $id
- * @property string|null $codeTrx
+ * @property string|null $invoice
  * @property int|null $userId
- * @property string|null $productId
+ * @property string|null $codeTrx
  * @property int|null $stockFirst
  * @property int|null $qtyTrx
  * @property int|null $stockFinal
@@ -34,8 +34,9 @@ class Transaction extends ActiveRecord
     public function rules()
     {
         return [
-            [['userId', 'productId', 'stockFirst', 'qtyTrx', 'stockFinal'], 'integer'],
-            [['codeTrx'], 'string', 'max' => 45],
+            [['userId', 'stockFirst', 'qtyTrx', 'stockFinal'], 'integer'],
+            [['invoice', 'codeTrx'], 'string', 'max' => 50],
+            [['datePublished'], 'safe'],
         ];
     }
 
@@ -59,11 +60,19 @@ class Transaction extends ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'userId']);
     }
     
+    public function getProducts(){
+        return $this->hasOne(Products::className(), ['id' => 'productId']);
+    }
+    
+    public function getProductIn(){
+        return $this->hasOne(ProductIn::className(), ['invoice' => 'codeTrx']);
+    }
+    
     public function search() {
         $query = self::find()
+            ->andFilterWhere(['like', 'invoice', $this->invoice])
             ->andFilterWhere(['like', 'codeTrx', $this->codeTrx])
-            ->andFilterWhere(['like', 'userId', $this->userId])
-            ->andFilterWhere(['like', 'productId', $this->productId]);
+            ->andFilterWhere(['like', 'userId', $this->userId]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
