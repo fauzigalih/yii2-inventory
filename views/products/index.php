@@ -1,4 +1,5 @@
 <?php
+use app\models\User;
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use app\widgets\ToolbarFilterButton;
@@ -50,15 +51,16 @@ $this->params['breadcrumbs'][] = $page;
             'unit',
             [
                 'attribute' => 'price',
-                'value' => function($model){
-                    return 'Rp. ' . number_format($model->price,0,',','.');
+                'contentOptions' => ['style' => 'width: 9%'],
+                'value' => function($model) {
+                    return 'Rp. ' . number_format($model->price, 0, ',', '.');
                 }
             ],
             [
                 'attribute' => 'imageProduct',
                 'format' => 'html',
                 'value' => function($model) {
-                    return Html::img(Yii::getAlias('@web/img/product/'.$model->imageProduct),
+                    return Html::img(Yii::getAlias('@web/img/product/' . $model->imageProduct),
                             ['width' => '80px', 'height' => '50px']);
                 }
             ],
@@ -71,8 +73,15 @@ $this->params['breadcrumbs'][] = $page;
                 'format' => ['date', 'dd-MM-Y']
             ],
             [
+                'attribute' => 'active',
+                'value' => function($model){
+                    return $model->active == User::STATUS_ACTIVE ? 'Yes' : 'No';
+                }
+            ],
+            [
                 'class' => 'yii\grid\ActionColumn',
-                'header' => 'Action'
+                'header' => 'Action',
+                'contentOptions' => ['style' => 'width: 7%']
             ],
         ],
     ]);

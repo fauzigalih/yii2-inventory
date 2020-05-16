@@ -1,7 +1,9 @@
 <?php
+use app\models\Products;
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use app\widgets\ToolbarFilterButton;
+use yii\grid\ActionColumn;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -46,39 +48,55 @@ $this->params['breadcrumbs'][] = $page;
             ],
             'invoice',
             [
-                'attribute' => 'user',
+                'attribute' => 'user.fullName',
                 'value' => function($model) {
                     return $model->user->fullName ?? null;
                 }
             ],
             [
-                'attribute' => 'nameProduct',
+                'attribute' => 'products.nameProduct',
                 'value' => function($model) {
                     return $model->products->nameProduct ?? null;
                 }
             ],
             [
-                'attribute' => 'unit',
+                'attribute' => 'products.typeProduct',
+                'value' => function($model) {
+                    return $model->products->typeProduct ?? null;
+                }
+            ],
+            [
+                'attribute' => 'products.unit',
                 'value' => function($model) {
                     return $model->products->unit ?? null;
                 }
             ],
             'qtyOut',
             [
-                'attribute' => 'price',
+                'attribute' => 'products.price',
                 'value' => function($model) {
-                    return 'Rp. ' . number_format($model->products->price, 0, ',', '.');
+                    return 'Rp. ' . number_format($model->products->price, 0,
+                            ',', '.');
                 }
             ],
             [
-                'attribute' => 'imageProduct',
+                'attribute' => 'products.imageProduct',
                 'format' => 'html',
                 'value' => function($model) {
                     return Html::img(Yii::getAlias('@web/img/product/' . $model->products->imageProduct),
                             ['width' => '80px', 'height' => '50px']);
                 }
             ],
-            'datePublished',
+            [
+                'attribute' => 'datePublished',
+                'format' => ['date', 'dd-MM-Y']
+            ],
+            [
+                'attribute' => 'products.active',
+                'value' => function($model) {
+                    return $model->products->active == Products::STATUS_ACTIVE ? 'Yes' : 'No';
+                }
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => 'Action'

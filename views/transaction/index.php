@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use app\widgets\ToolbarFilterButton;
+use yii\grid\ActionColumn;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -44,38 +45,37 @@ $this->title = $page . ' - ' . Yii::$app->name;
                 'class' => 'yii\grid\SerialColumn',
                 'header' => 'No.'
             ],
-            [
-                'attribute' => 'codeTrx',
-                'label' => 'Code Trx'
-            ],
+            'invoice',
             [
                 'attribute' => 'userId',
-                'label' => 'User Trx',
                 'value' => function($model) {
                     return $model->user->fullName ?? '';
                 }
             ],
+            'codeTrx',
             [
-                'label' => 'User Role',
+                'attribute' => 'imageProduct',
+                'format' => 'html',
                 'value' => function($model) {
-                    return ($model->user->role === 1) ? 'Admin' : 'User';
+                    return Html::img(Yii::getAlias('@web/img/product/' . $model->productIn->products->imageProduct),
+                            ['width' => '80px', 'height' => '50px']);
                 }
             ],
-            'codeProduct',
-            'total',
             [
-                'attribute' => 'typeProduct',
-                'value' => function($model) {
-                    return ($model->typeProduct == 1) ? 'Product In' : 'Product Out';
-                }
+                'attribute' => 'stockFirst',
+            ],
+            'qtyTrx',
+            'stockFinal',
+            [
+                'attribute' => 'datePublished',
+                'format' => ['date', 'dd-MM-Y']
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'header' => 'Action'
+                'header' => 'Action',
+                'template' => '{delete}'
             ],
         ],
     ]);
     ?>
-
-
 </div>
