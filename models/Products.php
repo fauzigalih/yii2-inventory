@@ -30,6 +30,8 @@ use yii\helpers\ArrayHelper;
  */
 class Products extends ActiveRecord {
     public $_imageProduct;
+    public $fromDate;
+    public $toDate;
 
     const STATUS_ACTIVE = 10;
     const STATUS_INACTIVE = 9;
@@ -57,12 +59,13 @@ class Products extends ActiveRecord {
      */
     public function rules() {
         return [
-            [['invoice', 'nameProduct', 'typeProduct', 'unit', 'price', 'stockFirst', 'imageProduct'], 'required'],
+//            [['invoice', 'nameProduct', 'typeProduct', 'unit', 'price', 'stockFirst', 'imageProduct'], 'required'],
             [['price', 'stockFirst', 'stockIn', 'stockOut', 'stockFinal', 'active'], 'integer'],
             [['invoice', 'nameProduct', 'typeProduct', 'unit', 'imageProduct'], 'string', 'max' => 45],
             [['datePublished'], 'default', 'value' => date('Y-m-d')],
             [['stockIn', 'stockOut'], 'default', 'value' => self::DEFAULT_VALUE_NULL],
             ['active', 'default', 'value' => self::STATUS_ACTIVE],
+            [['datePublished', 'fromDate', 'toDate'], 'safe']
         ];
     }
 
@@ -115,12 +118,25 @@ class Products extends ActiveRecord {
     }
 
     public function search() {
+        $fromDate = $this->fromDate;
+        $toDate = $this->toDate;
+        if($fromDate == '') {
+            $fromDate = '';
+            $toDate = '';
+        }else if($toDate == ''){
+            $toDate = $this->fromDate;
+        }
         $query = self::find()
             ->andFilterWhere(['like', 'invoice', $this->invoice])
             ->andFilterWhere(['like', 'nameProduct', $this->nameProduct])
             ->andFilterWhere(['like', 'typeProduct', $this->typeProduct])
             ->andFilterWhere(['like', 'unit', $this->unit])
-            ->andFilterWhere(['=', 'active', $this->active]);
+            ->andFilterWhere(['=', 'price', $this->price])
+            ->andFilterWhere(['=', 'stockFirst', $this->stockFirst])
+            ->andFilterWhere(['=', 'stockIn', $this->stockIn])
+            ->andFilterWhere(['=', 'stockOut', $this->stockOut])
+            ->andFilterWhere(['=', 'stockFinal', $this->stockFinal])
+            ->andFilterWhere(['between', 'datePublished', $fromDate, $toDate]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
