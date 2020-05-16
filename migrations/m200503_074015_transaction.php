@@ -14,9 +14,9 @@ class m200503_074015_transaction extends Migration
     {
         $this->createTable('transaction', [
             'id' => $this->primaryKey(),
-            'codeTrx' => $this->string(50)->notNull(),
+            'invoice' => $this->string(50)->notNull(),
             'userId' => $this->integer(11)->notNull(),
-            'productId' => $this->integer(11)->notNull(),
+            'codeTrx' => $this->string(50)->notNull(),
             'stockFirst' => $this->integer(11)->notNull(),
             'qtyTrx' => $this->integer(11)->notNull(),
             'stockFinal' => $this->integer(11)->notNull(),
