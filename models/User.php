@@ -17,6 +17,7 @@ use yii\data\ActiveDataProvider;
  * @property string|null $authKey
  * @property string|null $accessToken
  * @property string|null $role
+ * @property string|null $imageUser
  * @property int|null $active
  */
 class User extends ActiveRecord implements IdentityInterface {
@@ -52,7 +53,7 @@ class User extends ActiveRecord implements IdentityInterface {
         return [
 //            [['fullName', 'userName', 'password', 'role', 'active'], 'required'],
             [['role', 'active'], 'integer'],
-            [['fullName', 'userName'], 'string', 'max' => 80],
+            [['fullName', 'userName', 'imageUser'], 'string', 'max' => 80],
             [['password', 'authKey', 'accessToken'], 'string', 'max' => 255],
             [['oldPassword', 'newPassword', 'newPasswordConfirm'], 'string', 'max' => 255],
         ];
@@ -68,6 +69,7 @@ class User extends ActiveRecord implements IdentityInterface {
             'userName' => 'User Name',
             'password' => 'Password',
             'role' => 'Role',
+            'imageUser' => 'Image User',
             'active' => 'Active',
         ];
     }
