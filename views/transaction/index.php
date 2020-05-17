@@ -1,4 +1,5 @@
 <?php
+use app\models\Products;
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use app\widgets\ToolbarFilterButton;
@@ -30,8 +31,6 @@ $this->title = $page . ' - ' . Yii::$app->name;
         'dataProvider' => $model->search(),
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
-            'before' => Html::a('<i class="glyphicon glyphicon-plus"></i> Create ' . $page,
-                ['create'], ['class' => 'btn btn-primary']),
             'heading' => $page,
             'headingOptions' => ['class' => 'panel-heading'],
         ],
@@ -47,7 +46,7 @@ $this->title = $page . ' - ' . Yii::$app->name;
             ],
             'invoice',
             [
-                'attribute' => 'userId',
+                'attribute' => 'user.fullName',
                 'value' => function($model) {
                     return $model->user->fullName ?? '';
                 }
@@ -57,19 +56,24 @@ $this->title = $page . ' - ' . Yii::$app->name;
                 'attribute' => 'imageProduct',
                 'format' => 'html',
                 'value' => function($model) {
-                    return Html::img(Yii::getAlias('@web/img/product/' . $model->productIn->products->imageProduct),
+                    return Html::img(Yii::getAlias('@web/img/product/' . ($model->productIn->products->imageProduct ?? $model->productOut->products->imageProduct)),
                             ['width' => '80px', 'height' => '50px']);
                 }
             ],
-            [
-                'attribute' => 'stockFirst',
-            ],
+            'stockFirst',
             'qtyTrx',
             'stockFinal',
             [
                 'attribute' => 'datePublished',
                 'format' => ['date', 'dd-MM-Y']
             ],
+            [
+                'attribute' => 'products.active',
+                'value' => function($model){
+                    return $model->productIn->products->active ?? $model->productOut->products->active == Products::STATUS_ACTIVE ? 'Yes' : 'No';
+                }
+            ],
+//                'active',
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => 'Action',
