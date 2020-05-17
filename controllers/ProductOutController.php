@@ -76,7 +76,7 @@ class ProductOutController extends Controller {
             $model->userId = Yii::$app->user->identity->id;
             $dataQty = $model->qtyOut;
             $dataProduct = $model->productId;
-            if (!($model->sumProduct($dataQty, $dataProduct) && $model->save())) {
+            if (!($model->sumProduct($dataQty, $dataProduct) && $model->createTransaction() && $model->save())) {
                 return $this->render('create', ['model' => $model]);
             }
             return $this->redirect(['index']);
@@ -96,6 +96,7 @@ class ProductOutController extends Controller {
         $model = $this->findModel($id);
         $dataQty = $model->qtyOut;
         $dataProduct = $model->productId;
+        $dataInvoice = $model->invoice;
 
         if ($model->load(Yii::$app->request->post())) {
             if ($dataProduct != $model->productId) {
@@ -108,7 +109,7 @@ class ProductOutController extends Controller {
                     $dataQty = 0;
                 }
             }
-            if (!($model->sumProduct($dataQty, $dataProduct) && $model->save())) {
+            if (!($model->sumProduct($dataQty, $dataProduct) && $model->createTransaction(true, $dataInvoice) && $model->save())) {
                 return $this->render('update', ['model' => $model]);
             }
             return $this->redirect(['index']);
