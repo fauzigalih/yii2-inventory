@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\ProductIn;
 use app\models\Products;
+use app\models\Transaction;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -79,7 +80,7 @@ class ProductInController extends Controller {
             $model->userId = Yii::$app->user->identity->id;
             $dataQty = $model->qtyIn;
             $dataProduct = $model->productId;
-            if (!($model->sumProduct($dataQty, $dataProduct) && $model->save())) {
+            if (!($model->sumProduct($dataQty, $dataProduct) && $model->createTransaction() && $model->save())) {
                 return $this->render('create', ['model' => $model]);
             }
             return $this->redirect(['index']);
@@ -99,6 +100,7 @@ class ProductInController extends Controller {
         $model = $this->findModel($id);
         $dataQty = $model->qtyIn;
         $dataProduct = $model->productId;
+        $dataInvoice = $model->invoice;
 
         if ($model->load(Yii::$app->request->post())) {
             if($dataProduct != $model->productId){
@@ -111,7 +113,7 @@ class ProductInController extends Controller {
                     $dataQty = 0;
                 }
             }
-            if(!($model->sumProduct($dataQty, $dataProduct) && $model->save())){
+            if(!($model->sumProduct($dataQty, $dataProduct) && $model->createTransaction(true, $dataInvoice) && $model->save())){
                 return $this->render('update', ['model' => $model]);
             }
             return $this->redirect(['index']);
