@@ -143,4 +143,20 @@ class ProductIn extends ActiveRecord {
         return ArrayHelper::map(self::find()->all(), 'id', 'invoice');
     }
     
+    public function createTransaction($dataUpdate = false, $dataInvoice = null){
+        if ($dataUpdate){
+            $modelTransaction = Transaction::findOne(['codeTrx' => $dataInvoice]);
+        }else{
+            $modelTransaction = new Transaction();
+            $modelTransaction->invoice = Transaction::getInvoiceData();
+        }
+        $modelTransaction->userId = $this->userId;
+        $modelTransaction->codeTrx = $this->invoice;
+        $modelTransaction->stockFirst = $this->products->stockFirst;
+        $modelTransaction->qtyTrx = $this->qtyIn;
+        $modelTransaction->stockFinal = $this->products->stockFinal;
+        
+        return $modelTransaction->save();
+    }
+    
 }
