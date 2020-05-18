@@ -16,7 +16,7 @@ This project in step develop, version finished at 30 May 2020.
   <li>Create database in (MySQL, SQL Server, or etc), example: inventory.</li>
   <li>Setting connection database in <code>config/db.php</code></li>
   <li>Run CLI or Command Prompt in your root aplication (make sure you have installed the composer).</li>
-  <li>Run <code>php yii migration</code></li>
+  <li>Run <code>php yii migrate</code></li>
   <li>Refresh your database, and get 5 new tables in it.</li>
   <li>Finish.</li>
 </ul>
