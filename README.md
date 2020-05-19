@@ -1,7 +1,7 @@
 # yii2-inventory
 Project build with framework yii2 template basic.
 
-This project in step develop, version finished at 30 May 2020.
+Status: <b>Release Version 1.0</b>
 
 # Required Project
 1. Composer
@@ -9,9 +9,10 @@ This project in step develop, version finished at 30 May 2020.
 3. Git
 
 # Technology
-1. Yii2 framework
-2. Migration database
-<h3># Instalation migration</h3>
+1. PHP Language
+2. Yii2 framework
+3. Migration database
+<h3>Instalation migration</h3>
 <ul>
   <li>Create database in (MySQL, SQL Server, or etc), example: inventory.</li>
   <li>Setting connection database in <code>config/db.php</code></li>
