@@ -1,8 +1,8 @@
 <?php
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;port=3377;dbname=inventory_migrate',
+    'dsn' => 'mysql:host=localhost;port=3306;dbname=inventory',
     'username' => 'root',
-    'password' => '1234',
+    'password' => '',
     'charset' => 'utf8',
 ];
