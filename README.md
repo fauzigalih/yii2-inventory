@@ -15,7 +15,7 @@ Status: <b>Release Version 1.0</b>
 <h3>Instalation migration</h3>
 <ul>
   <li>Create database in (MySQL, SQL Server, or etc), example: inventory.</li>
-  <li>Setting connection database in <code>config/db.php</code></li>
+  <li>Setting connection database in <code>config/db_local.php</code></li>
   <li>Run CLI or Command Prompt in your root aplication (make sure you have installed the composer).</li>
   <li>Run <code>php yii migrate</code></li>
   <li>Refresh your database, and get 5 new tables in it.</li>
@@ -28,9 +28,10 @@ Status: <b>Release Version 1.0</b>
 ```
 composer update -vvv
 ```
-3. Setting database in <code>config/db.php</code>
-4. Use migration for instalation database
-5. Finish.
+3. Setting database in <code>config/db_local.php</code>
+4. Use migration for instalation database.
+5. Run <code>php yii serve</code> on CLI, this automatic create url access for aplication ex: localhost:8080
+6. Finish.
 
 <b>You can login with username: admin, and password: admin</b> 
 
